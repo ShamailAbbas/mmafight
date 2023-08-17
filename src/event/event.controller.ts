@@ -10,6 +10,7 @@ import {
 import { EventService } from './event.service';
 import { CreateEventDto, UpdateEventDto } from './dto/createEventDto';
 import { ApiTags } from '@nestjs/swagger';
+import { Fighter } from 'src/entities/fighter.entity';
 
 @Controller('event')
 @ApiTags('Event')
@@ -22,6 +23,10 @@ export class EventController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.eventService.findOne(id);
+  }
+  @Get(':id/participants')
+  async getParticipants(@Param('id') id: number): Promise<any> {
+    return this.eventService.getParticipants(id);
   }
   @Post()
   createFight(@Body() event: CreateEventDto) {

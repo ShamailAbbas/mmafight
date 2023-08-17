@@ -28,6 +28,6 @@ export class Event {
   @OneToMany(() => Fight, (fight) => fight.event)
   fights: Fight[];
 
-  @ManyToMany(() => Fighter, { cascade: true })
+  @ManyToMany(() => Fighter, (fighter) => fighter.events, { cascade: true })
   participants: Fighter[];
 }

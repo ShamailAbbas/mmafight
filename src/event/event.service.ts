@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from 'src/entities/event.entity';
 import { Repository } from 'typeorm';
 import { CreateEventDto, UpdateEventDto } from './dto/createEventDto';
+import { Fighter } from 'src/entities/fighter.entity';
 
 @Injectable()
 export class EventService {
@@ -17,6 +18,12 @@ export class EventService {
   }
   async findOne(id: number) {
     return await this.event.findOne({ where: { id: id } });
+  }
+  async getParticipants(id: number): Promise<any> {
+    return await this.event.findOne({
+      where: { id: id },
+      relations: ['participants'],
+    });
   }
   async createEvent(createEventDto: CreateEventDto) {
     const event = await this.event.create(createEventDto);

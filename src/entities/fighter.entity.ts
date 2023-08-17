@@ -34,7 +34,7 @@ export class Fighter {
   @OneToMany(() => Fight, (fight) => fight.fighter2)
   fightsAsFighter2: Fight[];
 
-  @ManyToMany(() => Event)
+  @ManyToMany(() => Event, (event) => event.participants)
   @JoinTable()
   events: Event[];
 }
