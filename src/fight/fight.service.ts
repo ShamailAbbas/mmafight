@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Fight } from 'src/entities/fight.entity';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { CreateFightDto, UpdateFightDto } from './dto/createFightDto';
 
 @Injectable()
@@ -32,6 +32,16 @@ export class FightService {
         'event',
       ],
     });
+  }
+  async getUpcomingFights(): Promise<Fight[]> {
+    const currentDate = new Date();
+    const fights = await this.fight.find({
+      where: {
+        date: MoreThan(currentDate),
+      },
+      relations: ['fighter1', 'fighter2', 'event'],
+    });
+    return fights;
   }
   async createFight(createFightDto: CreateFightDto) {
     const fight = await this.fight.create(createFightDto);

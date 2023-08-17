@@ -10,6 +10,7 @@ import {
 import { FightService } from './fight.service';
 import { CreateFightDto, UpdateFightDto } from './dto/createFightDto';
 import { ApiTags } from '@nestjs/swagger';
+import { Fight } from 'src/entities/fight.entity';
 
 @Controller('fight')
 @ApiTags('Fight')
@@ -19,10 +20,15 @@ export class FightController {
   findAll() {
     return this.fightService.findAll();
   }
+  @Get('upcoming')
+  async getUpcomingFights(): Promise<Fight[]> {
+    return this.fightService.getUpcomingFights();
+  }
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.fightService.findOne(id);
   }
+
   @Post()
   createFight(@Body() Fight: CreateFightDto) {
     return this.fightService.createFight(Fight);

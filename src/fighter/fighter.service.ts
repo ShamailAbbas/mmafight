@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Fighter } from 'src/entities/fighter.entity';
 import { Fight } from 'src/entities/fight.entity';
 
@@ -24,15 +24,16 @@ export class FighterService {
       throw new NotFoundException('Fighter not found');
     }
 
-    const fights = await this.fightRepository.find({
-      where: [{ fighter1: fighter }, { fighter2: fighter }],
-    });
     const currentDate = new Date();
-    const upcomingFights = fights?.filter(
-      (fight) => new Date(fight.date) > currentDate,
-    );
+    const fights = await this.fightRepository.find({
+      where: [
+        { fighter1: fighter, date: MoreThan(currentDate) },
+        { fighter2: fighter, date: MoreThan(currentDate) },
+      ],
+      relations: ['fighter1', 'fighter2', 'event'],
+    });
 
-    return upcomingFights;
+    return fights;
   }
   async getFighterStats(id: number): Promise<FighterStats> {
     const fighter = await this.fighterRepo.findOne({ where: { id } });
